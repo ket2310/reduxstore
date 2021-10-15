@@ -12,16 +12,13 @@ import spinner from '../../assets/spinner.gif';
 function ProductList() {
   const dispatch = useDispatch();
   const state = useSelector((state) => state);
-  const currentCategory = state;
 
   const { loading, data } = useQuery(QUERY_PRODUCTS);
   useEffect(() => {
     if (data) {
-      console.log(data)
       dispatch({
         type: UPDATE_PRODUCTS,
         products: data.products,
-
       });
       data.products.forEach((product) => {
         idbPromise('products', 'put', product);
@@ -37,13 +34,10 @@ function ProductList() {
   }, [data, loading, dispatch]);
 
   function filterProducts() {
-    if (!currentCategory) {
+    if (!state) {
       return state.products;
     }
-
-    return state.products.filter(
-      (product) => product.category._id === currentCategory
-    );
+    return state.products.filter((product) => product.category._id === state.currentCategory);
   }
 
   return (
